@@ -100,17 +100,17 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .schedule-plot{border:1px solid var(--line);background:#fff;border-radius:var(--radius-md);padding:13px 14px;margin:12px 0 14px}
 .schedule-plot-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:10px;border-bottom:1px solid #efede7;font-size:10px}
 .schedule-plot-head>span{font-size:9px;font-weight:700;text-align:right}
-.schedule-track{display:grid;grid-template-columns:100px minmax(0,1fr);gap:12px;align-items:center;padding:12px 0 17px;border-bottom:1px solid #f1efe9}
+.schedule-axis{display:grid;grid-template-columns:1fr 1fr 1fr;margin:8px 2px 0 112px;color:#89877e;font-size:8px;font-variant-numeric:tabular-nums}.schedule-axis span:nth-child(2){text-align:center}.schedule-axis span:last-child{text-align:right}
+.schedule-track{display:grid;grid-template-columns:100px minmax(0,1fr);gap:12px;align-items:center;padding:10px 0 12px;border-bottom:1px solid #f1efe9}
 .schedule-track:last-of-type{border-bottom:0}
 .schedule-track-label b,.schedule-track-label small{display:block}.schedule-track-label b{font-size:10px;text-transform:capitalize}.schedule-track-label small{font-size:9px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.schedule-track-line{height:19px;position:relative;margin:0 2px 13px;border-bottom:1px solid #dedbd3;background:linear-gradient(90deg,transparent 49.8%,#e9e6df 50%,transparent 50.2%)}
-.schedule-bar{position:absolute;top:2px;height:9px;min-width:8px;border-radius:2px;background:#c95736}
+.schedule-track-line{height:38px;position:relative;margin:0 2px;border-bottom:1px solid #dedbd3;background:linear-gradient(90deg,transparent 49.8%,#e9e6df 50%,transparent 50.2%)}
+.schedule-bar{position:absolute;top:5px;height:9px;min-width:2px;border-radius:2px;background:#c95736}
 .schedule-bar.wok{background:#64815e}
-.schedule-track-line small{position:absolute;top:14px;font-size:8px;color:#747168;white-space:nowrap;transform:translateX(-4px)}
-.schedule-track-line .schedule-finish{transform:translateX(-100%)}
+.schedule-time-labels{position:absolute;inset:17px 0 auto;height:19px;display:flex;align-items:center;justify-content:space-between;gap:6px;font-variant-numeric:tabular-nums}.schedule-time-labels small{position:static;display:block;flex:0 1 auto;min-width:0;padding:1px 3px;background:#fff;color:#68665e;font-size:8px;line-height:1.2;white-space:nowrap}.schedule-time-labels .schedule-start{text-align:left}.schedule-time-labels .schedule-finish{text-align:right}
 .schedule-plot-foot{padding-top:9px;color:var(--muted);font-size:9px}
 .schedule-plot .sync-ok{color:var(--green)}.schedule-plot .sync-warn{color:var(--amber)}
 .stat-icon{background:#f2efe8;color:#6c685e}.stat-icon.orange{background:#fbede6;color:var(--accent)}.stat-icon.green,.stat-icon.blue,.stat-icon.purple{background:#f2efe8;color:#6c685e}
 .attention-summary{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-block:1px solid var(--line);padding:11px 2px;margin:0 0 16px;font-size:10px;color:var(--muted)}
 .attention-summary>strong{font-size:10px;color:var(--ink)}.attention-summary .attention-item{display:inline-flex;align-items:center;gap:6px}.attention-summary .attention-item:before{content:"";width:6px;height:6px;border-radius:50%;background:#6c956e}.attention-summary .attention-item.warn:before{background:#bd7142}.attention-summary button{padding:0;background:none;color:var(--accent);font-size:10px;font-weight:650}
-@media(max-width:680px){.schedule-plot{padding:11px}.schedule-track{grid-template-columns:74px minmax(0,1fr);gap:8px}.schedule-track-label small{font-size:8px}.schedule-track-line small{font-size:7px}.schedule-plot-head{align-items:flex-start;flex-direction:column;gap:5px}}
+@media(max-width:680px){.schedule-plot{padding:11px}.schedule-track{grid-template-columns:74px minmax(0,1fr);gap:8px}.schedule-track-label small{font-size:8px}.schedule-axis{margin-left:82px;font-size:7px}.schedule-time-labels{gap:2px}.schedule-time-labels small{font-size:7px;padding-inline:1px}.schedule-plot-head{align-items:flex-start;flex-direction:column;gap:5px}}
