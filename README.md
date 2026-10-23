@@ -17,7 +17,7 @@ KitchenSync provides a shared ordering flow for both brands, schedules work acro
 - [Tests and production build](#tests-and-production-build)
 - [Project layout](#project-layout)
 - [Push to GitHub](#push-to-github)
-- [Deploy to Vercel](#deploy-to-vercel)
+- [Deploy to Render](#deploy-to-render)
 - [Known limitations](#known-limitations)
 
 ## What the demo does
@@ -188,6 +188,7 @@ KitchenSync/
 │   ├── package.json
 │   └── vite.config.ts
 ├── requirements.txt
+├── render.yaml
 ├── .gitignore
 └── README.md
 ```
@@ -231,30 +232,25 @@ git push -u origin main
 
 If the GitHub repository already has commits you need to preserve, first fetch and inspect its history (`git fetch origin`, `git log --oneline --graph --all`), then reconcile the histories before pushing. GitHub authentication may prompt through the configured credential manager; do not put a password or token in the remote URL.
 
-## Deploy to Vercel
+## Deploy to Render
 
-The root `vercel.json` configures a Vite static build from `frontend/`, routes `/api/*` to the FastAPI Python function at `api/index.py`, and serves the built frontend for other paths. The Python function imports the existing `backend.main:app`; the root `requirements.txt` supplies its Python dependencies. No custom build settings need to be entered in the Vercel dashboard.
+The root `render.yaml` is a Render Blueprint for a single Python web service. It installs the backend requirements, installs and builds the Vite frontend, starts FastAPI on Render's `$PORT`, and checks `/api/health`. FastAPI serves the generated `frontend/dist` bundle from the same origin, so the frontend can continue calling `/api` without a separate API URL or dashboard routing setup.
 
-For a CLI deployment, install/use the Vercel CLI and run from the repository root:
+To deploy from GitHub:
 
-```powershell
-npm install --global vercel
-vercel
-```
+1. Push the latest `main` branch to `https://github.com/iuttkarshh0409/KitchenSync`.
+2. In Render, choose **New → Blueprint** and connect that GitHub repository.
+3. Render reads `render.yaml`; review the `kitchensync` service and choose **Apply**.
 
-Follow the CLI prompts to log in and link this folder to a Vercel project. For a production deployment after linking:
+The Blueprint selects the Singapore region and Free plan to match the project context shown during setup. You can change these in `render.yaml` before applying. The service auto-deploys on commits to `main`.
 
-```powershell
-vercel --prod
-```
-
-You can also import the GitHub repository in Vercel; the committed `vercel.json` provides the build and routing configuration. Vercel's Python functions have an ephemeral filesystem, so the app uses `/tmp/kitchensync.db` there. This is suitable for a demo, but SQLite data is not durable across cold starts/instances. Use a hosted persistent database before relying on deployed orders or analytics.
+The configured SQLite path is `/tmp/kitchensync.db`. Render's Free service has an ephemeral filesystem, so orders and settings can be lost on restart/deploy. Use a paid persistent disk (mount it and set `KITCHENSYNC_DB_PATH` to a file on that mount) or a hosted database for durable data. Free services also spin down when idle; the first request after inactivity may be delayed. No secrets are required by this MVP.
 
 ## Known limitations
 
 - Kitchen updates use lightweight polling; there is no event stream or WebSocket.
 - Authentication, POS integration, voice transcription, and delivery-driver integration are not included.
 - Demo costs and branch capacities need verified business configuration before decisions are based on them.
-- Vercel's SQLite database is ephemeral and instance-local; hosted demo orders and settings may reset or differ between function instances.
+- Render Free's SQLite database is ephemeral; hosted demo orders and settings may reset after restarts/deploys.
 - Branch dashboard supports evidence review only; it cannot execute a closure or consolidation.
 - No full browser-based multi-user walkthrough is included in the automated test suite.

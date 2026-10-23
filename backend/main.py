@@ -1,8 +1,10 @@
 from datetime import datetime,timedelta
 from decimal import Decimal
+from pathlib import Path
 from uuid import uuid4
 from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel,Field
 from .database import MENU,connect,init_db
 from .scheduler import schedule_order
@@ -175,4 +177,9 @@ def set_branch_review(branch_id:str,data:BranchStatusInput):
   b=db.execute('SELECT * FROM branches WHERE id=?',(branch_id,)).fetchone()
   if not b:raise HTTPException(404,'Branch not found')
   db.execute('UPDATE branches SET review_status=? WHERE id=?',(data.review_status,branch_id));return {'id':branch_id,'review_status':data.review_status,'is_open':bool(b['is_open']),'message':'Review status updated; branch operation status is unchanged.'}
+
+# In a Render deployment the Vite bundle is built into frontend/dist and served
+# by this same web service. Local development continues to use the Vite dev server.
+frontend_dist=Path(__file__).resolve().parent.parent/'frontend'/'dist'
+if frontend_dist.is_dir():app.mount('/',StaticFiles(directory=frontend_dist,html=True),name='frontend')
 
