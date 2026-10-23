@@ -33,6 +33,8 @@ def init_db():
   for item in MENU:db.execute('UPDATE order_items SET ingredient_cost_per_unit=? WHERE menu_item_id=? AND ingredient_cost_per_unit IS NULL',(item.get('ingredient_cost_per_unit'),item['id']))
   db.execute("UPDATE orders SET branch_id='bhanwarkuan' WHERE id IN ('DEMO-101','DEMO-102','DEMO-104','DEMO-105') AND branch_id IS NULL")
   db.execute("UPDATE orders SET branch_id='jabalpur' WHERE id='DEMO-103' AND branch_id IS NULL")
+  db.execute("UPDATE tasks SET status='batched' WHERE status='queued' AND EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id=tasks.order_id AND oi.station=tasks.station AND oi.batch_id IS NOT NULL AND tasks.item_summary=CAST(oi.quantity AS TEXT)||' × '||oi.name)")
+  db.execute("UPDATE orders SET status='queued',completed_at=NULL WHERE EXISTS (SELECT 1 FROM order_items oi JOIN tasks t ON t.batch_id=oi.batch_id WHERE oi.order_id=orders.id AND oi.batch_id IS NOT NULL AND t.status NOT IN ('completed','batched'))")
 def seed_demo(db):
  base=datetime.now().replace(hour=12,minute=15,second=0,microsecond=0)
  for oi,(oid,items) in enumerate([('DEMO-101',[('veg-momo',2),('hakka-noodles',1)]),('DEMO-102',[('veg-momo',1),('veg-fried-rice',1)]),('DEMO-103',[('veg-momo',2)]),('DEMO-104',[('chicken-momo',1),('chilli-paneer',1)]),('DEMO-105',[('hakka-noodles',2),('fried-momo',1)])]):

@@ -135,7 +135,8 @@ def transition(task_id,action):
    db.execute("UPDATE tasks SET status='completed',actual_finish=? WHERE id=?",(now,task_id));linked=[t['order_id']]
    if t['batch_id']:linked=[x['order_id'] for x in db.execute('SELECT order_id FROM order_items WHERE batch_id=?',(t['batch_id'],)).fetchall()]
    for oid in set(linked):
-    if db.execute("SELECT COUNT(*) n FROM tasks WHERE order_id=? AND status!='completed'",(oid,)).fetchone()['n']==0:db.execute("UPDATE orders SET status='completed',completed_at=? WHERE id=?",(now,oid))
+    pending=db.execute("SELECT COUNT(*) n FROM tasks t WHERE t.status NOT IN ('completed','batched') AND (t.order_id=? OR t.batch_id IN (SELECT batch_id FROM order_items WHERE order_id=? AND batch_id IS NOT NULL))",(oid,oid)).fetchone()['n']
+    if pending==0:db.execute("UPDATE orders SET status='completed',completed_at=? WHERE id=?",(now,oid))
   return {'task_id':task_id,'status':'active' if action=='start' else 'completed'}
 @app.post('/api/tasks/{task_id}/start')
 def start(task_id:str):return transition(task_id,'start')
