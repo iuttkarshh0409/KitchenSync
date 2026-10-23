@@ -17,6 +17,7 @@ KitchenSync provides a shared ordering flow for both brands, schedules work acro
 - [Tests and production build](#tests-and-production-build)
 - [Project layout](#project-layout)
 - [Push to GitHub](#push-to-github)
+- [Deploy to Vercel](#deploy-to-vercel)
 - [Known limitations](#known-limitations)
 
 ## What the demo does
@@ -230,10 +231,30 @@ git push -u origin main
 
 If the GitHub repository already has commits you need to preserve, first fetch and inspect its history (`git fetch origin`, `git log --oneline --graph --all`), then reconcile the histories before pushing. GitHub authentication may prompt through the configured credential manager; do not put a password or token in the remote URL.
 
+## Deploy to Vercel
+
+The root `vercel.json` configures a Vite static build from `frontend/`, routes `/api/*` to the FastAPI Python function at `api/index.py`, and serves the built frontend for other paths. The Python function imports the existing `backend.main:app`; the root `requirements.txt` supplies its Python dependencies. No custom build settings need to be entered in the Vercel dashboard.
+
+For a CLI deployment, install/use the Vercel CLI and run from the repository root:
+
+```powershell
+npm install --global vercel
+vercel
+```
+
+Follow the CLI prompts to log in and link this folder to a Vercel project. For a production deployment after linking:
+
+```powershell
+vercel --prod
+```
+
+You can also import the GitHub repository in Vercel; the committed `vercel.json` provides the build and routing configuration. Vercel's Python functions have an ephemeral filesystem, so the app uses `/tmp/kitchensync.db` there. This is suitable for a demo, but SQLite data is not durable across cold starts/instances. Use a hosted persistent database before relying on deployed orders or analytics.
+
 ## Known limitations
 
 - Kitchen updates use lightweight polling; there is no event stream or WebSocket.
 - Authentication, POS integration, voice transcription, and delivery-driver integration are not included.
 - Demo costs and branch capacities need verified business configuration before decisions are based on them.
+- Vercel's SQLite database is ephemeral and instance-local; hosted demo orders and settings may reset or differ between function instances.
 - Branch dashboard supports evidence review only; it cannot execute a closure or consolidation.
 - No full browser-based multi-user walkthrough is included in the automated test suite.

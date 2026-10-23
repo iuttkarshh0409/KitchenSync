@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
+import os
 from pathlib import Path
 import sqlite3
-DB_PATH=Path(__file__).parent/'kitchensync.db'
+DB_PATH=Path(os.environ.get('KITCHENSYNC_DB_PATH', '/tmp/kitchensync.db' if os.environ.get('VERCEL') else Path(__file__).parent/'kitchensync.db'))
 MENU=[
 {"id":"veg-momo","name":"Steamed Veg Momos","brand":"Momobuzz","station":"steamer","category":"Steamed momos","description":"Hand-folded cabbage, carrot and ginger dumplings","price":129,"ingredient_cost_per_unit":42,"duration_minutes":10,"aliases":["veg momo","veg momos","steamed veg momo","momos"]},
 {"id":"chicken-momo","name":"Chicken Momos","brand":"Momobuzz","station":"steamer","category":"Steamed momos","description":"Juicy chicken dumplings with a house chilli dip","price":159,"ingredient_cost_per_unit":57,"duration_minutes":10,"aliases":["chicken momo","chicken momos"]},

@@ -16,6 +16,7 @@ htmlcov/
 *.sqlite3
 *.db-journal
 *.sqlite-journal
+/api/__pycache__/
 
 # Frontend dependencies and generated build output
 frontend/node_modules/
