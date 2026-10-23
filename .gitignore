@@ -1,0 +1,32 @@
+# Python virtual environments and bytecode
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test and coverage output
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local databases and SQLite sidecar files (keep schema/source files tracked)
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.sqlite-journal
+
+# Frontend dependencies and generated build output
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+
+# Local environment and editor/OS files
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
